@@ -13,7 +13,7 @@ I am planning to get the logger operational first. I'm not worried about getting
 
 I am rusty on pipes so I will need to brush up on using read and write to communicate over pipes, as this project will be completed in C++, which necessitates the read and write commands.
 
-2025-10-29 16:51
+2025-10-19 16:51
 
 I realized that in order to see that the logger is functional, the driver needs to communicate with it first, so I need to focus on getting the processes set up properly in the driver.
 
@@ -21,3 +21,8 @@ My plan for this session is to set up a parent and child process, allow a user i
 
 I am still trying to get the core functionality of the driver down. I want the user to input the name of the logger file and have that be read through a pipe. I have some basic logic for this down, but it is currently causing a segmentation fault. I will need to refine this next session, and then I can move on to actually sending some arguments to the external logger.
 
+2025-10-23 12:12
+
+I am encountering difficulty implementing my driver.cpp program. I was struggling with understanding how the driver could communicate with a separate logger and encryption program via pipes, but upon looking at the process files provided with this project, I realized I could dedicate one pipe p1 to represent the driver-encryption pipeline, and pipe p2 to represent the encryption-logger pipeline.
+
+I am going to push the provided process files (cpu.cpp and mem.cpp) to this project and determine a way to incorporate the cpu and memory logic into my driver program... It shouldn't be too difficult now that I have a better grasp of how communication over pipes works.
