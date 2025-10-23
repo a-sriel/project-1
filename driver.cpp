@@ -8,40 +8,56 @@ int main(int argc, const char** argv)
     // To store pipe identifiers
 	// p1[0] - read from pipe
 	// p1[1] - write to pipe
-    int p1[2],p2[2];
-	pid_t child; // To store the process id
+    int p1[2], p2[2], p3[2];
+	pid_t encryption, logger; // To store the process id
 
+    // p1 = outgoing to encryption
 	if(pipe(p1) == -1)
 	{
 		std::cerr << "Unable to create first pipe" << std::endl;
 		exit(-1);
 	}
 
+    // p2 = incoming from encryption
 	if(pipe(p2) == -1)
 	{
 		std::cerr << "Unable to create second pipe" << std::endl;
 		exit(-1);
 	}
 
-	child = fork();
+    // p3 = outgoing to logger
+    if(pipe(p2) == -1)
+	{
+		std::cerr << "Unable to create third pipe" << std::endl;
+		exit(-1);
+	}
 
-    if(child == -1)
+    // create child process for encryption 
+	encryption = fork();
+
+    if(encryption == -1)
 	{
 		std::cerr << "Error forking" << std::endl;
 		exit(-1);
 	}
 
-	if(child == 0)
+	if(encryption == 0)
 	{
 		//I am the child process
 		close(p1[1]); // p1 is for reading
-		close(p2[0]); // p2 is for writing
-		dup2(p1[0], 0); //map pipe to stdin
-		dup2(p2[1], 1); //map pipe to stdout
+        close(p2[0]); // p2 is for writing
+		close(p3[0]); // p2 is for writing
 
-		char *args[] = {"./mem",NULL};
-		execvp(args[0],args); //replace this program with the mem program
+		dup2(p1[0], 0); // map pipe to stdin
+		dup2(p2[1], 1); // map pipe to stdout
+        dup2(p3[1], 2); // map pipe to stdout (stderr)
+
+		char *args[] = {"./encryption",NULL};
+		execvp(args[0],args); // replace this program with the encryption program
+
+        exit(1);
 	}
+    /*
 	else
 	{
 		//I am the parent
@@ -68,6 +84,7 @@ int main(int argc, const char** argv)
 		write(p1[1], &tmp, 1);
         wait(NULL);
 	}
+    */
 
     /*
     int fd[2];
