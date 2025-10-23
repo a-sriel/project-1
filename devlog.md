@@ -28,3 +28,7 @@ I am encountering difficulty implementing my driver.cpp program. I was strugglin
 I am going to push the provided process files (cpu.cpp and mem.cpp) to this project and determine a way to incorporate the cpu and memory logic into my driver program... It shouldn't be too difficult now that I have a better grasp of how communication over pipes works.
 
 I have copied over the cpu logic to the driver program, and have commented out my prior logic. I have established three pipes, and have created forks and established the child process for the encryption program. The child process for the logger has now been established in a near-identical fashion. I suspect that I may need to rearrange the order of the close and dup2 calls, but I will see how it goes in the testing stage.
+
+2025-10-23 14:33
+
+I accomplished a lot during this session, and I implemented some of the core logic for the driver program (communication with the encryption and logger programs, and forking to create new processes). I established three pipes and I believe I have a clear idea of how each of them communicate between programs. For the next session, I plan to finish the driver program and test how it actually communicates between files. To do this, I need to establish the driver process. I plan to open/close the respective pipes and implement the menu program (in some form) using a while loop. I also need to create the logger.cpp and encryption.cpp files. 
