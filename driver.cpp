@@ -86,6 +86,32 @@ int main(int argc, const char** argv)
 	}
     */
 
+    // create child process for logger
+	logger = fork();
+
+    if(logger == -1)
+	{
+		std::cerr << "Error forking" << std::endl;
+		exit(-1);
+	}
+
+	if(logger == 0)
+	{
+		//I am the child process
+		close(p3[1]); 
+        close(p1[0]); 
+        close(p1[1]);
+		close(p2[0]); 
+        close(p2[1]);
+
+        dup2(p3[0], 0); // map pipe to stdin
+
+		char *args[] = {"./logger",NULL};
+		execvp(args[0],args); // replace this program with the logger program
+
+        exit(1);
+	}
+
     /*
     int fd[2];
     // fd[0] = read
