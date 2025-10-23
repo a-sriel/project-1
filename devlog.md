@@ -26,3 +26,5 @@ I am still trying to get the core functionality of the driver down. I want the u
 I am encountering difficulty implementing my driver.cpp program. I was struggling with understanding how the driver could communicate with a separate logger and encryption program via pipes, but upon looking at the process files provided with this project, I realized I could dedicate one pipe p1 to represent the driver-encryption pipeline, and pipe p2 to represent the encryption-logger pipeline.
 
 I am going to push the provided process files (cpu.cpp and mem.cpp) to this project and determine a way to incorporate the cpu and memory logic into my driver program... It shouldn't be too difficult now that I have a better grasp of how communication over pipes works.
+
+I have copied over the cpu logic to the driver program, and have commented out my prior logic.
