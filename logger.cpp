@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <ctime>
 #include <fstream>
+#include <string>
 
 int main(int argc, const char** argv)
 {

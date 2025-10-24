@@ -2,6 +2,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>               /* UNIX and POSIX constants and functions (fork, pipe) */
+#include <string>
 
 std::string history;
 
