@@ -40,3 +40,7 @@ The project is coming along well. I am curious if I will need more or less pipes
 For this session, I need to finish most of the logic for the driver program. I want to make sure it communicates with the encryption and logger programs. I will most likely implement the logger logic first, upon finishing up the driver, as per my original plan.
 
 I got part of the driver working. It creates the 3 pipes properly (I had an error where I was piping p2 twice, which I corrected to pipe p2 then p3), and also collects the logger filename and the command from the user. 
+
+2025-10-24 14:33
+
+In the past session, I implemented a lot of logic for the driver program. For this session, however, I really need to ensure that the driver is properly sending information over to the logger and encryption programs. I might add some bare bones code to the encryption program to track whether it’s sending data to the logger.
