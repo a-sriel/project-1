@@ -32,3 +32,9 @@ I have copied over the cpu logic to the driver program, and have commented out m
 2025-10-23 14:33
 
 I accomplished a lot during this session, and I implemented some of the core logic for the driver program (communication with the encryption and logger programs, and forking to create new processes). I established three pipes and I believe I have a clear idea of how each of them communicate between programs. For the next session, I plan to finish the driver program and test how it actually communicates between files. To do this, I need to establish the driver process. I plan to open/close the respective pipes and implement the menu program (in some form) using a while loop. I also need to create the logger.cpp and encryption.cpp files. 
+
+2025-10-23 20:22
+
+The project is coming along well. I am curious if I will need more or less pipes, or if the ordering of closing a pipe and dup2 matters. I may need to rearrange some lines of code to get this operational.
+
+For this session, I need to finish most of the logic for the driver program. I want to make sure it communicates with the encryption and logger programs. I will most likely implement the logger logic first, upon finishing up the driver, as per my original plan.
