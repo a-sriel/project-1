@@ -13,6 +13,8 @@ int main(int argc, const char** argv)
     int p1[2], p2[2], p3[2];
 	pid_t encryption, logger; // To store the process id
 
+    std::string filename;
+
     std::cout << "Input name of logger file: ";
     std::getline(std::cin, filename);
 
@@ -111,7 +113,7 @@ int main(int argc, const char** argv)
 
         dup2(p3[0], 0); // map pipe to stdin
 
-		char *args[] = {"./logger",NULL};
+		char *args[] = {"./logger", (char*)filename.c_str(), NULL};
 		execvp(args[0],args); // replace this program with the logger program
 
         exit(1);
@@ -145,7 +147,7 @@ int main(int argc, const char** argv)
             std::cout << "\nType '1' to use a past string"
                             "\nOr type '2' to create a new one";
             std::string selection;
-            std::cin >> selection;
+            std::getline(std::cin, selection);
             if (std::stoi(selection) == 1)
             {
 
@@ -153,11 +155,12 @@ int main(int argc, const char** argv)
             else if (std::stoi(selection) == 2)
             {
                 std::cout << "\nEnter string: ";
-                std::cin >> passkey;
+                std::getline(std::cin, passkey);
 
                 // send to encryption program
-                write(p1[1], command.c_str(), command.size());
-                history += command + std::endl;
+                std::string line = "[ENCRYPT]" + passkey + "\n";
+                write(p1[1], line.c_str(), line.size());
+                history += command + "\n";
 
             } else {
                 std::cout<< "\nInvalid input. Please try again.";

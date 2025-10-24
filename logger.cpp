@@ -3,21 +3,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctime>
+#include <fstream>
 
-int main(int argc, const char** argv, std::string filename)
+int main(int argc, const char** argv)
 {
-    time_t timestamp = time(NULL);
-    std::string 
-
-    std::cout << 
-    timestamp.tm_year + "-" + timestamp.tm_month + "-" timestamp.tm_day +
-    " " + timestamp.tm_hour + ":" + timestamp.tm_min;
+    std::string filename = argv[1];
 
     std::string line;
-    std::ofstream out(filename);
+    std::ofstream out(filename, std::ios::app);
 
     while(std::getline(std::cin, line))
     {
+        time_t timestamp = time(NULL);
         out << line << std::endl;
     }
 

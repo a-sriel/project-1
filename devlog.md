@@ -44,3 +44,5 @@ I got part of the driver working. It creates the 3 pipes properly (I had an erro
 2025-10-24 14:33
 
 In the past session, I implemented a lot of logic for the driver program. For this session, however, I really need to ensure that the driver is properly sending information over to the logger and encryption programs. I might add some bare bones code to the encryption program to track whether it’s sending data to the logger.
+
+I changed all of the cin >> to getlines, to be entirely consistent. I still need to implement error handling for every case, but I want to ensure that the program works with correct input before I worry about anything else. I realized that, although the menu is working, the program exits after a single "encrypt" command... this is likely because I implemented nothing in my encryption.cpp file, so nothing is written to the pipe, causing the program to exit. Although driver.cpp and logger.cpp are not totally complete, I am going to start adding some functionality to encryption.cpp to see if I can get the communication working.
