@@ -50,3 +50,9 @@ I changed all of the cin >> to getlines, to be entirely consistent. I still need
 2025-10-24 17:23
 
 I have implemented a stub for the encryption program. I implemented a basic menu and the whitespace parser logic. I still have to pass the passkey/arguments through cout and also implement the actual encryption logic for the argument.
+
+2025-10-24 17:48
+
+I had to change course a little bit compared to a few sessions ago (need to implement the encryption program sooner than expected) but I think the program is coming along nicely.
+
+I'm doing some testing as to whether the processes communicate via cerr or cout. I might need to use cerr to transmit information to the log. I'm still a little bit confused about that but I think I can figure it out by the end of this session. Cout = communication to driver and Cerr = communication to logger? Keeping two separate input streams keeps everything cleaner...
