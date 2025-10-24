@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>               /* UNIX and POSIX constants and functions (fork, pipe) */
 
+std::string history;
+
 int main(int argc, const char** argv)
 {
     // To store pipe identifiers
@@ -10,6 +12,9 @@ int main(int argc, const char** argv)
 	// p1[1] - write to pipe
     int p1[2], p2[2], p3[2];
 	pid_t encryption, logger; // To store the process id
+
+    std::cout << "Input name of logger file: ";
+    std::getline(std::cin, filename);
 
     // p1 = outgoing to encryption
 	if(pipe(p1) == -1)
@@ -119,13 +124,10 @@ int main(int argc, const char** argv)
     close(p3[1]);
 
     // menu
-    std::string filename, command, passkey;
+    std::string command, passkey;
 
     while (command != "quit")
     {
-        std::cout << "Input name of logger file: ";
-        std::getline(std::cin, filename);
-
         std::cout << "\nEnter command:";
         std::getline(std::cin, command);
 
@@ -152,6 +154,11 @@ int main(int argc, const char** argv)
             {
                 std::cout << "\nEnter string: ";
                 std::cin >> passkey;
+
+                // send to encryption program
+                write(p1[1], command.c_str(), command.size());
+                history += command + std::endl;
+
             } else {
                 std::cout<< "\nInvalid input. Please try again.";
             }
@@ -164,7 +171,7 @@ int main(int argc, const char** argv)
         }
         if (command == "history")
         {
-
+            std::cout << history;
         }
     }
 
