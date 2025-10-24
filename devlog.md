@@ -38,3 +38,5 @@ I accomplished a lot during this session, and I implemented some of the core log
 The project is coming along well. I am curious if I will need more or less pipes, or if the ordering of closing a pipe and dup2 matters. I may need to rearrange some lines of code to get this operational.
 
 For this session, I need to finish most of the logic for the driver program. I want to make sure it communicates with the encryption and logger programs. I will most likely implement the logger logic first, upon finishing up the driver, as per my original plan.
+
+I got part of the driver working. It creates the 3 pipes properly (I had an error where I was piping p2 twice, which I corrected to pipe p2 then p3), and also collects the logger filename and the command from the user. 

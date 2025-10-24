@@ -26,7 +26,7 @@ int main(int argc, const char** argv)
 	}
 
     // p3 = outgoing to logger
-    if(pipe(p2) == -1)
+    if(pipe(p3) == -1)
 	{
 		std::cerr << "Unable to create third pipe" << std::endl;
 		exit(-1);
@@ -111,6 +111,67 @@ int main(int argc, const char** argv)
 
         exit(1);
 	}
+
+    // establish driver process
+    close(p1[0]);
+    close(p2[1]);
+    close(p3[0]);
+    close(p3[1]);
+
+    // menu
+    std::string filename, command, passkey;
+
+    while (command != "quit")
+    {
+        std::cout << "Input name of logger file: ";
+        std::getline(std::cin, filename);
+
+        std::cout << "\nEnter command:";
+        std::getline(std::cin, command);
+
+        // menu options
+        if (command == "quit")
+        {
+            write(p1[1], "quit\n", 5);
+        }
+        if (command == "password")
+        {
+
+        }
+        if (command == "encrypt")
+        {
+            std::cout << "\nType '1' to use a past string"
+                            "\nOr type '2' to create a new one";
+            std::string selection;
+            std::cin >> selection;
+            if (std::stoi(selection) == 1)
+            {
+
+            }
+            else if (std::stoi(selection) == 2)
+            {
+                std::cout << "\nEnter string: ";
+                std::cin >> passkey;
+            } else {
+                std::cout<< "\nInvalid input. Please try again.";
+            }
+
+            write(p1[1], passkey.c_str(), passkey.size());
+        }
+        if (command == "decrypt")
+        {
+
+        }
+        if (command == "history")
+        {
+
+        }
+    }
+
+    close(p1[1]);
+    close(p2[0]);
+
+    wait(NULL);
 
     /*
     int fd[2];
