@@ -6,16 +6,11 @@
 #include <stdio.h>
 #include <map>
 
-#include <algorithm>
-#include <cctype>   
-#include <limits>    
+#include <cctype>      
 #include <cstring>
 
 std::map<int, std::string> history;
 int history_idx = 0;
-
-// need to keep track of password
-std::string current_password;
 
 // file handling
 FILE* from_encryption;
@@ -89,10 +84,10 @@ std::string pull_from_history()
         return "";
     }
 
-    std::cout << "\n\nHistory: \n"
+    std::cout << "\n\nHistory: \n";
     for (const auto &pair: history)
     {
-        std::cout << "\t" << pair.first << " " << pair.second << "/n";
+        std::cout << "\t" << pair.first << " " << pair.second << "\n";
     }
 
     std::cout << "\n\nEnter the digit for the string you want to use: ";
@@ -109,7 +104,7 @@ std::string pull_from_history()
         auto itr = history.find(index);
         if (itr != history.end()) 
         {
-            return it->second;
+            return itr->second;
         } 
         else 
         {
@@ -180,7 +175,7 @@ int main(int argc, const char** argv)
 
 		dup2(p1[0], 0); // map pipe to stdin
 		dup2(p2[1], 1); // map pipe to stdout
-        dup2(p2[1], 2); // map pipe to stdout (stderr)
+        // dup2(p2[1], 2); // map pipe to stdout (stderr)
 
         close(p1[0]);
         close(p2[1]);
@@ -251,7 +246,7 @@ int main(int argc, const char** argv)
     while (true)
     {
         std::cout << "\nEnter command:";
-        if (std::getline(std::cin, command))
+        if (!std::getline(std::cin, command))
         {
             std::cout << "End of file reached" << std::endl;
             break;
@@ -288,6 +283,7 @@ int main(int argc, const char** argv)
                 if (argument.empty())
                 {
                     std::cout << "Password not found\n";
+                    continue;
                 } 
 
                 password = argument;
@@ -339,6 +335,7 @@ int main(int argc, const char** argv)
                 // add entered string to history
                 history_idx++;
                 history.insert({history_idx, argument});
+            }
             else 
             {
                 std::cout<< "\nInvalid input. Please try again.";
@@ -365,7 +362,7 @@ int main(int argc, const char** argv)
         else if (command == "decrypt")
         {
             std::cout << "\nType '1' to use a past string"
-                            "\nOr type '2' to create a new one";
+                            "\nOr type '2' to create a new one: ";
             std::string selection;
             if (!std::getline(std::cin, selection)) continue;
 
@@ -380,7 +377,7 @@ int main(int argc, const char** argv)
             }
             else if (selection == "2")
             {
-                argument = get_string("Enter string to encrypt: ");
+                argument = get_string("Enter string to decrypt: ");
                 if (argument.empty()) continue;
 
                 // add entered string to history
@@ -418,7 +415,7 @@ int main(int argc, const char** argv)
             }
             else
             {
-                std::cout << "\n\nHistory: \n"
+                std::cout << "\n\nHistory: \n";
                 for (const auto &pair: history)
                 {
                     std::cout << pair.first << " " << pair.second << "\n";

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <ctime>

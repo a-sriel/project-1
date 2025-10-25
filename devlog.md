@@ -78,3 +78,11 @@ Driver program is completed. May do some formatting or bug fixes later.
 Added timestamps and proper formatting to logger. Logger is complete.
 
 Fixed driver program. The password was not working properly due to some piping issues. Program was also set up to take filename as a command line argument. Encryption program should also be good to go. I will do one last error check before finalizing this project.
+
+2025-10-24 23:10
+
+The program is finally complete. I erroneously piped stderr and stdout to the same pipe in the driver program, so I commented out the problematic pipe. I made some changes to all of the files for consistency and readability. 
+
+The Vigenere cipher in the encryption program was not offset by the ASCII 'A' properly, so I added some extra offsets to fix this issue. Extraneous includes were removed from all files, and some basic logic errors and typos (such as missing semicolons) were performed.
+
+I added a readme and removed unnecessary project files as well.
