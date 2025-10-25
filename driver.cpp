@@ -4,8 +4,17 @@
 #include <unistd.h>               /* UNIX and POSIX constants and functions (fork, pipe) */
 #include <string>
 #include <stdio.h>
+#include <map>
 
-std::string history;
+std::map<int, std::string> history;
+int history_idx = 0;
+
+std::string command_menu = "password - takes a string to be used as a password /n"
+                            "encrypt - takes a string that will be encrypted using the Vigenere cipher based on a provided password /n"
+                            "decrypt - takes a string to be decrypted /n"
+                            "history - shows all strings from this session /n"
+                            "quit - exits the program /n";
+                           
 FILE* from_encryption;
 char buffer[256];
 
@@ -68,34 +77,6 @@ int main(int argc, const char** argv)
 
         exit(1);
 	}
-    /*
-	else
-	{
-		//I am the parent
-		close(p1[0]);
-		close(p2[1]);
-
-		char tmp;
-
-		for(int i=10; i>0; i--)
-		{
-            tmp = 1; //write command
-			write(p1[1], &tmp, 1);
-			write(p1[1], (char*)&i, sizeof(int));
-			std::cout << "Set to ";
-			tmp = 0; //Read Command
-			write(p1[1], &tmp, 1);
-			int val;
-			read(p2[0], (char*)&val, sizeof(int));
-			std::cout << val << std::endl;
-
-		}
-
-        tmp = 2; // Halt Mem Command
-		write(p1[1], &tmp, 1);
-        wait(NULL);
-	}
-    */
 
     // create child process for logger
 	logger = fork();
@@ -129,6 +110,7 @@ int main(int argc, const char** argv)
     close(p3[0]);
     close(p3[1]);
 
+    // open read end of p2
     from_encryption = fdopen(p2[0], "r");
     if (from_encryption == NULL)
     {
@@ -139,25 +121,35 @@ int main(int argc, const char** argv)
     // menu
     std::string command, argument, password;
 
-    while (command != "QUIT")
+    while (command != "quit")
     {
         std::cout << "\nEnter command:";
         std::getline(std::cin, command);
 
+        for (auto &c : command) = std::to_lower((unsigned char)c);
+
         // menu options
-        if (command == "QUIT")
+        if (command == "quit")
         {
             write(p1[1], "QUIT\n", 5);
         }
-        else if (command == "PASSWORD")
+        else if (command == "password")
         {
             std::cout << "\nType '1' to use a past string"
-                            "\nOr type '2' to create a new one";
+                            "\nOr type '2' to create a new one: ";
             std::string selection;
             std::getline(std::cin, selection);
             if (std::stoi(selection) == 1)
             {
-
+                if (password.empty())
+                {
+                    std::cout << "Password not found\n";
+                } else if !( for (auto &c : command) = std::is_alpha((unsigned char)c) );{
+                    std::cout << "Password can only consist of letters from the alphabet.\n";
+                } else {
+                    int idx = 0;
+                    std::cout << "Enter the digit for the string you want to use for the password.\n";
+                }
             }
             else if (std::stoi(selection) == 2)
             {
@@ -167,7 +159,6 @@ int main(int argc, const char** argv)
                 // send to encryption program
                 std::string line = "PASS " + password + "\n";
                 write(p1[1], line.c_str(), line.size());
-                history += command + "\n";
 
                 if (fgets(buffer, sizeof(buffer), from_encryption) != NULL)
                 {
@@ -178,15 +169,18 @@ int main(int argc, const char** argv)
                 std::cout<< "\nInvalid input. Please try again.";
             }
         }
-        else if (command == "ENCRYPT")
+        else if (command == "encrypt")
         {
             std::cout << "\nType '1' to use a past string"
-                            "\nOr type '2' to create a new one";
+                            "\nOr type '2' to create a new one: ";
             std::string selection;
             std::getline(std::cin, selection);
             if (std::stoi(selection) == 1)
             {
-
+                for (const auto &pair: history)
+                {
+                    std::cout << pair.first << " " << pair.second << "/n";
+                }
             }
             else if (std::stoi(selection) == 2)
             {
@@ -196,7 +190,10 @@ int main(int argc, const char** argv)
                 // send to encryption program
                 std::string line = "ENCRYPT " + argument + "\n";
                 write(p1[1], line.c_str(), line.size());
-                history += command + "\n";
+
+                // add entered string to history
+                history_idx++;
+                history.insert({history_idx, argument});
 
                 if (fgets(buffer, sizeof(buffer), from_encryption) != NULL)
                     std::cout << buffer;
@@ -205,56 +202,56 @@ int main(int argc, const char** argv)
                 std::cout<< "\nInvalid input. Please try again.";
             }
 
-            //write(p1[1], passkey.c_str(), passkey.size());
         }
-        else if (command == "DECRYPT")
+        else if (command == "decrypt")
         {
+            std::cout << "\nType '1' to use a past string"
+                            "\nOr type '2' to create a new one";
+            std::string selection;
+            std::getline(std::cin, selection);
+            if (std::stoi(selection) == 1)
+            {
+                for (const auto &pair: history)
+                {
+                    std::cout << pair.first << " " << pair.second << "/n";
+                }
+            }
+            else if (std::stoi(selection) == 2)
+            {
+                std::cout << "\nEnter string: ";
+                std::getline(std::cin, argument);
+
+                // send to encryption program
+                std::string line = "DECRYPT " + argument + "\n";
+                write(p1[1], line.c_str(), line.size());
+
+                // add entered string to history
+                history_idx++;
+                history.insert({history_idx, argument});
+
+                if (fgets(buffer, sizeof(buffer), from_encryption) != NULL)
+                    std::cout << buffer;
+
+            } else {
+                std::cout<< "\nInvalid input. Please try again.";
+            }
 
         }
-        else if (command == "HISTORY")
+        else if (command == "history")
         {
-            std::cout << history;
+            for (const auto &pair: history)
+            {
+                std::cout << pair.first << " " << pair.second << "/n";
+            }
         }
     }
 
     fclose(from_encryption);
     close(p1[1]);
 
-
     wait(NULL);
     wait(NULL);
 
-    /*
-    int fd[2];
-    // fd[0] = read
-    // fd[1] = write
-    if (pipe(fd) == -1)
-    {
-        printf("Failed to open pipe\n");
-        return 1;
-    }
 
-    int pid = fork();
-    // parent process
-    if (pid == 0)
-    {
-        close(fd[0]);
-        
-        std::string str;
-        printf("Input name of logger file: ");
-        scanf("%s", &str);
-        write(fd[1], &str, sizeof(std::string));
-        close(fd[1]);
-    }
-    // child process
-    else
-    {
-        close(fd[1]);
-        std::string str_2;
-        read(fd[0], &str_2, sizeof(std::string));
-        close(fd[0]);
-        printf("Obtained from child process %s\n", &str_2);
-    }
-    */
     return 0;
 }

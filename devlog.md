@@ -70,3 +70,5 @@ The biggest hurdle I've overcome so far while testing my program is definitely t
 2025-10-24 19:52
 
 For this session, I need to finish the menu in the driver, add input error handling, and just generally clean up the menu interface. I also want to double check that my encryption logic is correct. I also need to make sure the history in the driver is working, and to print the menu of options to the user so that they know what to choose from.
+
+Updated menu interface and history interface have been partially implemented. History was changed to a map, so user could access each string at a given index.
