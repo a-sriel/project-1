@@ -5,6 +5,7 @@
 #include <ctime>
 #include <fstream>
 #include <string>
+#include <iomanip>
 
 int main(int argc, const char** argv)
 {
@@ -13,10 +14,12 @@ int main(int argc, const char** argv)
         std::cerr << "ERROR filename not found" << std::endl;
         return 1;
     }
+
     std::string filename = argv[1];
     std::string line;
 
     std::ofstream out(filename, std::ios::app);
+
     if (!out)
     {
         std::cerr << "ERROR file could not be opened" << std::endl;
@@ -30,8 +33,7 @@ int main(int argc, const char** argv)
             break;
         }
 
-        std::string command;
-        std::string message;
+        std::string command, argument;
 
         line.erase(0, line.find_first_not_of(" \t"));
         size_t del = line.find(' ');
@@ -39,14 +41,15 @@ int main(int argc, const char** argv)
         if (del == std::string::npos)
         {
             command = line;
-            message = "";
+            argument = "";
         }
         else
         {
             command = line.substr(0, del);
-            message = line.substr(del+1);
+            argument = line.substr(del+1);
         }
 
+        // create timestamps
         time_t t = time(NULL);
         struct tm* timestamp = localtime(&t);
 
@@ -55,7 +58,7 @@ int main(int argc, const char** argv)
             << std::setfill('0') << std::setw(2) << timestamp->tm_mday << " "
             << std::setfill('0') << std::setw(2) << timestamp->tm_hour << ":"
             << std::setfill('0') << std::setw(2) << timestamp->tm_min 
-            << " [" << command << "] " << message << std::endl;
+            << " [" << command << "] " << argument << std::endl;
     }
 
     out.close();

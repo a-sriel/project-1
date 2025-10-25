@@ -76,3 +76,5 @@ Updated menu interface and history interface have been partially implemented. Hi
 Driver program is completed. May do some formatting or bug fixes later.
 
 Added timestamps and proper formatting to logger. Logger is complete.
+
+Fixed driver program. The password was not working properly due to some piping issues. Program was also set up to take filename as a command line argument. Encryption program should also be good to go. I will do one last error check before finalizing this project.

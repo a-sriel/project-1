@@ -11,9 +11,7 @@ std::string encrypt(const std::string &argument, const std::string &passkey)
     for (int i = 0; i < argument.size(); i++)
     {
         char letter = (argument[i] + passkey[i % passkey.size()]) % 26;
-
         letter += 'A';
-
         cipher.push_back(letter);
     }
 
@@ -27,9 +25,7 @@ std::string decrypt(const std::string &cipher, const std::string &passkey)
     for (int i = 0; i < cipher.size(); i++)
     {
         char letter = (cipher[i] - passkey[i % passkey.size()] + 26) % 26;
-
         letter += 'A';
-
         argument.push_back(letter);
     }
 
@@ -44,6 +40,7 @@ int main(int argc, const char** argv)
     {
         
         line.erase(0, line.find_first_not_of(" \t"));
+        line.erase(line.find_last_not_of(" \t")+1);
 
         // delimeter position for whitespace
         size_t del = line.find(' ');
