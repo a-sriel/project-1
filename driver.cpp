@@ -6,15 +6,108 @@
 #include <stdio.h>
 #include <map>
 
+#include <algorithm>
+#include <cctype>   
+#include <limits>    
+
 std::map<int, std::string> history;
 int history_idx = 0;
 
-std::string command_menu = "password - takes a string to be used as a password /n"
-                            "encrypt - takes a string that will be encrypted using the Vigenere cipher based on a provided password /n"
-                            "decrypt - takes a string to be decrypted /n"
-                            "history - shows all strings from this session /n"
-                            "quit - exits the program /n";
-                           
+std::string command_menu =  "Command menu:\n"
+                            "\tpassword - takes a string to be used as a password\n"
+                            "\tencrypt - takes a string that will be encrypted using the Vigenere cipher based on a provided password\n"
+                            "\tdecrypt - takes a string to be decrypted\n"
+                            "\thistory - shows all strings from this session\n"
+                            "\tquit - exits the program\n";
+bool is_alpha(const std::string &argument)
+{
+    bool alphabetical = true;
+    if (argument.empty())
+    {
+        alphabetical = false;
+    }
+    else
+    {
+        for (char c : argument)
+        {
+            if (!std::isalpha(static_cast<unsigned char>(c))){
+                alphabetical = false;
+            }
+        }
+    }
+
+    return alphabetical;
+}
+
+std::string to_upper(std::string argument) {
+    for (size_t i = 0; i < argument.length(); ++i) {
+        argument[i] = std::toupper(static_cast<unsigned char>(argument[i]));
+    }
+    return argument;
+}
+
+std::string get_string(const std::string &message)
+{
+    std::string argument;
+
+    while(true)
+    {
+        std::cout << message;
+        std::getline(std::cin, argument);
+
+        if (argument.empty())
+        {
+            std::cout << "Input cannot be empty\n";
+        } 
+        else if (!is_alpha(argument))
+        {
+            std::cout << "Input must be alphabetical, with no spaces or numbers\n";
+        }
+        else
+        {
+            return to_upper(argument);
+        }
+    }
+}
+
+std::string pull_from_history()
+{
+    if (history.empty())
+    {
+        std::cout << "History is empty\n";
+        return "";
+    }
+
+    for (const auto &pair: history)
+    {
+        std::cout << pair.first << " " << pair.second << "/n";
+    }
+
+    std::cout << "Enter the digit for the string you want to use: ";
+
+    std::string argument;
+    std::getline(std::cin, argument);
+
+    try {
+        int index = std::stoi(argument);
+        auto itr = history.find(index);
+        if (itr != history.end()) 
+        {
+            return it->second;
+        } 
+        else 
+        {
+            std::cout << "Invalid index: " << argument << "\n";
+            return "";
+        }
+    } 
+    catch (const std::exception& e) 
+    {
+        std::cout << "Index must be a number\n";
+        return "";
+    }
+}
+
 FILE* from_encryption;
 char buffer[256];
 
@@ -120,18 +213,29 @@ int main(int argc, const char** argv)
 
     // menu
     std::string command, argument, password;
+    std::cout << "\n\n" << command_menu << "\n\n";
 
-    while (command != "quit")
+    while (true)
     {
         std::cout << "\nEnter command:";
-        std::getline(std::cin, command);
+        if (std::getline(std::cin, command))
+        {
+            break;
+        }
 
-        for (auto &c : command) = std::to_lower((unsigned char)c);
+        for (char &c : command) 
+        {
+            c = std::tolower(static_cast<unsigned char>(c));
+        }
 
         // menu options
         if (command == "quit")
         {
-            write(p1[1], "QUIT\n", 5);
+            if (write(p1[1], "QUIT\n", 5) == -1)
+            {
+                std::cerr << "Failed to write to pipe" << std::endl;
+            } 
+            break;
         }
         else if (command == "password")
         {
@@ -177,15 +281,11 @@ int main(int argc, const char** argv)
             std::getline(std::cin, selection);
             if (std::stoi(selection) == 1)
             {
-                for (const auto &pair: history)
-                {
-                    std::cout << pair.first << " " << pair.second << "/n";
-                }
+                argument = pull_from_history();
             }
             else if (std::stoi(selection) == 2)
             {
-                std::cout << "\nEnter string: ";
-                std::getline(std::cin, argument);
+                argument = get_string("Enter string to encrypt: ");
 
                 // send to encryption program
                 std::string line = "ENCRYPT " + argument + "\n";
@@ -211,15 +311,11 @@ int main(int argc, const char** argv)
             std::getline(std::cin, selection);
             if (std::stoi(selection) == 1)
             {
-                for (const auto &pair: history)
-                {
-                    std::cout << pair.first << " " << pair.second << "/n";
-                }
+                argument = pull_from_history();
             }
             else if (std::stoi(selection) == 2)
             {
-                std::cout << "\nEnter string: ";
-                std::getline(std::cin, argument);
+                argument = get_string("Enter string to encrypt: ");
 
                 // send to encryption program
                 std::string line = "DECRYPT " + argument + "\n";
@@ -251,7 +347,6 @@ int main(int argc, const char** argv)
 
     wait(NULL);
     wait(NULL);
-
 
     return 0;
 }
