@@ -66,3 +66,7 @@ Also, in the encryption program, I added an additional modulo within the passkey
 2025-10-24 19:30
 
 The biggest hurdle I've overcome so far while testing my program is definitely the compilation. I was only compiling the driver.cpp file, and had forgotten to compile encryption.cpp and logger.cpp by themselves... When I was running ./driver, there were no ./encryption or ./logger accessible so the program kept exiting after each command. After compiling each program, I was able to test and run the program. I need to clean up all of my programs, finish error handling for all cases, and also implement the decryption logic in the driver. I also need to check the case for string inputs. Apart from this, my program is nearly complete.
+
+2025-10-24 19:52
+
+For this session, I need to finish the menu in the driver, add input error handling, and just generally clean up the menu interface. I also want to double check that my encryption logic is correct. I also need to make sure the history in the driver is working, and to print the menu of options to the user so that they know what to choose from.
