@@ -74,3 +74,5 @@ For this session, I need to finish the menu in the driver, add input error handl
 Updated menu interface and history interface have been partially implemented. History was changed to a map, so user could access each string at a given index.
 
 Driver program is completed. May do some formatting or bug fixes later.
+
+Added timestamps and proper formatting to logger. Logger is complete.

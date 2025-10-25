@@ -22,10 +22,40 @@ int main(int argc, const char** argv)
         std::cerr << "ERROR file could not be opened" << std::endl;
         return 1;
     }
+
     while(std::getline(std::cin, line))
     {
-        time_t timestamp = time(NULL);
-        out << line << std::endl;
+        if (line == "QUIT")
+        {
+            break;
+        }
+
+        std::string command;
+        std::string message;
+
+        line.erase(0, line.find_first_not_of(" \t"));
+        size_t del = line.find(' ');
+
+        if (del == std::string::npos)
+        {
+            command = line;
+            message = "";
+        }
+        else
+        {
+            command = line.substr(0, del);
+            message = line.substr(del+1);
+        }
+
+        time_t t = time(NULL);
+        struct tm* timestamp = localtime(&t);
+
+        out << (timestamp->tm_year + 1900) << "-"
+            << std::setfill('0') << std::setw(2) << (timestamp->tm_mon + 1) << "-"
+            << std::setfill('0') << std::setw(2) << timestamp->tm_mday << " "
+            << std::setfill('0') << std::setw(2) << timestamp->tm_hour << ":"
+            << std::setfill('0') << std::setw(2) << timestamp->tm_min 
+            << " [" << command << "] " << message << std::endl;
     }
 
     out.close();
