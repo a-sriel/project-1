@@ -66,6 +66,7 @@ int main(int argc, const char** argv)
             if (argument.empty())
             {
                 std::cerr << "ERROR passkey not found\n";
+                std::cout << "RESULT error, passkey not found\n";
             }
             else
             {
@@ -91,11 +92,13 @@ int main(int argc, const char** argv)
         else if (command == "QUIT")
         {
             std::cerr << "QUIT program exited\n";
+            std::cout << "RESULT quit program\n";
             break;
         }
         else
         {
             std::cerr << "ERROR command not found\n";
+            std::cout << "RESULT error, command not found\n";
         }
     }
 

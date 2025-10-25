@@ -62,3 +62,5 @@ I added an encryption and decryption method to the encryption program. The encry
 I've discovered a deadlock in my driver program. I added a filestream to handle p2 reads.
 
 Also, in the encryption program, I added an additional modulo within the passkey character array so that, if the passkey is shorter in length than the argument string, the passkey repeats itself.
+
+The biggest hurdle I've overcome so far while testing my program is definitely the compilation. I was only compiling the driver.cpp file, and had forgotten to compile encryption.cpp and logger.cpp by themselves... When I was running ./driver, there were no ./encryption or ./logger accessible so the program kept exiting after each command. After compiling each program, I was able to test and run the program. I need to clean up all of my programs, finish error handling for all cases, and also implement the decryption logic in the driver. I also need to check the case for string inputs. Apart from this, my program is nearly complete.

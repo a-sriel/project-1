@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>               /* UNIX and POSIX constants and functions (fork, pipe) */
 #include <string>
+#include <stdio.h>
 
 std::string history;
 FILE* from_encryption;
@@ -148,7 +149,7 @@ int main(int argc, const char** argv)
         {
             write(p1[1], "QUIT\n", 5);
         }
-        if (command == "PASSWORD")
+        else if (command == "PASSWORD")
         {
             std::cout << "\nType '1' to use a past string"
                             "\nOr type '2' to create a new one";
@@ -168,11 +169,16 @@ int main(int argc, const char** argv)
                 write(p1[1], line.c_str(), line.size());
                 history += command + "\n";
 
+                if (fgets(buffer, sizeof(buffer), from_encryption) != NULL)
+                {
+                    std::cout << buffer;
+                }
+
             } else {
                 std::cout<< "\nInvalid input. Please try again.";
             }
         }
-        if (command == "ENCRYPT")
+        else if (command == "ENCRYPT")
         {
             std::cout << "\nType '1' to use a past string"
                             "\nOr type '2' to create a new one";
@@ -201,11 +207,11 @@ int main(int argc, const char** argv)
 
             //write(p1[1], passkey.c_str(), passkey.size());
         }
-        if (command == "DECRYPT")
+        else if (command == "DECRYPT")
         {
 
         }
-        if (command == "HISTORY")
+        else if (command == "HISTORY")
         {
             std::cout << history;
         }
