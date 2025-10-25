@@ -58,3 +58,7 @@ I had to change course a little bit compared to a few sessions ago (need to impl
 I'm doing some testing as to whether the processes communicate via cerr or cout. I might need to use cerr to transmit information to the log. I'm still a little bit confused about that but I think I can figure it out by the end of this session. Cout = communication to driver and Cerr = communication to logger? Keeping two separate input streams keeps everything cleaner...
 
 I added an encryption and decryption method to the encryption program. The encrypter adds the string argument and the passkey at the current index, then mods them by 26 (since the alphabet has 26 characters). The decryption program does the same, but in reverse (and uses subtraction instead of addition).
+
+I've discovered a deadlock in my driver program. I added a filestream to handle p2 reads.
+
+Also, in the encryption program, I added an additional modulo within the passkey character array so that, if the passkey is shorter in length than the argument string, the passkey repeats itself.

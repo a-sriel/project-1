@@ -5,6 +5,8 @@
 #include <string>
 
 std::string history;
+FILE* from_encryption;
+char buffer[256];
 
 int main(int argc, const char** argv)
 {
@@ -126,24 +128,27 @@ int main(int argc, const char** argv)
     close(p3[0]);
     close(p3[1]);
 
-    // menu
-    std::string command, passkey;
+    from_encryption = fdopen(p2[0], "r");
+    if (from_encryption == NULL)
+    {
+        std::cerr << "Failed to open pipe" << std::endl;
+        exit(-1);
+    }
 
-    while (command != "quit")
+    // menu
+    std::string command, argument, password;
+
+    while (command != "QUIT")
     {
         std::cout << "\nEnter command:";
         std::getline(std::cin, command);
 
         // menu options
-        if (command == "quit")
+        if (command == "QUIT")
         {
-            write(p1[1], "quit\n", 5);
+            write(p1[1], "QUIT\n", 5);
         }
-        if (command == "password")
-        {
-
-        }
-        if (command == "encrypt")
+        if (command == "PASSWORD")
         {
             std::cout << "\nType '1' to use a past string"
                             "\nOr type '2' to create a new one";
@@ -156,32 +161,61 @@ int main(int argc, const char** argv)
             else if (std::stoi(selection) == 2)
             {
                 std::cout << "\nEnter string: ";
-                std::getline(std::cin, passkey);
+                std::getline(std::cin, password);
 
                 // send to encryption program
-                std::string line = "[ENCRYPT]" + passkey + "\n";
+                std::string line = "PASS " + password + "\n";
                 write(p1[1], line.c_str(), line.size());
                 history += command + "\n";
 
             } else {
                 std::cout<< "\nInvalid input. Please try again.";
             }
-
-            write(p1[1], passkey.c_str(), passkey.size());
         }
-        if (command == "decrypt")
+        if (command == "ENCRYPT")
+        {
+            std::cout << "\nType '1' to use a past string"
+                            "\nOr type '2' to create a new one";
+            std::string selection;
+            std::getline(std::cin, selection);
+            if (std::stoi(selection) == 1)
+            {
+
+            }
+            else if (std::stoi(selection) == 2)
+            {
+                std::cout << "\nEnter string: ";
+                std::getline(std::cin, argument);
+
+                // send to encryption program
+                std::string line = "ENCRYPT " + argument + "\n";
+                write(p1[1], line.c_str(), line.size());
+                history += command + "\n";
+
+                if (fgets(buffer, sizeof(buffer), from_encryption) != NULL)
+                    std::cout << buffer;
+
+            } else {
+                std::cout<< "\nInvalid input. Please try again.";
+            }
+
+            //write(p1[1], passkey.c_str(), passkey.size());
+        }
+        if (command == "DECRYPT")
         {
 
         }
-        if (command == "history")
+        if (command == "HISTORY")
         {
             std::cout << history;
         }
     }
 
+    fclose(from_encryption);
     close(p1[1]);
-    close(p2[0]);
 
+
+    wait(NULL);
     wait(NULL);
 
     /*

@@ -10,7 +10,7 @@ std::string encrypt(const std::string &argument, const std::string &passkey)
 
     for (int i = 0; i < argument.size(); i++)
     {
-        char letter = (argument[i] + passkey[i]) % 26;
+        char letter = (argument[i] + passkey[i % passkey.size()]) % 26;
 
         letter += 'A';
 
@@ -26,7 +26,7 @@ std::string decrypt(const std::string &cipher, const std::string &passkey)
 
     for (int i = 0; i < cipher.size(); i++)
     {
-        char letter = (cipher[i] - passkey[i] + 26) % 26;
+        char letter = (cipher[i] - passkey[i % passkey.size()] + 26) % 26;
 
         letter += 'A';
 
@@ -49,25 +49,55 @@ int main(int argc, const char** argv)
         size_t del = line.find(' ');
 
         // split string
-        command = (del == std::string::npos) ? line : line.substr(0, del);  // command = first half
-        argument = (del == std::string::npos) ? line: line.substr(del+1);   // argument = second half
-
-        if (command == "encrypt")
+        if (del == std::string::npos)
+        {   
+            command = line;        
+            argument = "";
+        }
+        else
         {
-            encrypt(argument, passkey);
+            command = line.substr(0, del);  // command = first half
+            argument = line.substr(del+1);  // argument = second half
+        }
+        
+
+        if (command == "PASS")
+        {
+            if (argument.empty())
+            {
+                std::cerr << "ERROR passkey not found\n";
+            }
+            else
+            {
+                std::cerr << "PASS passkey set\n";
+                passkey = argument;
+                std::cout << "RESULT passkey set\n";
+            }
+        }
+        else if (command == "ENCRYPT")
+        {
+            std::string encrypted = encrypt(argument, passkey);
+            std::cerr << "ENCRYPT " + argument + "\n";
+            std::cout << "RESULT " + encrypted + "\n";
         }
 
-        if (command == "decrypt")
+        else if (command == "DECRYPT")
         {
-
+            std::string decrypted = decrypt(argument, passkey);
+            std::cerr << "DECRYPT argument\n";
+            std::cout << "RESULT " + decrypted + "\n";
         }
 
-        if (command == "quit")
+        else if (command == "QUIT")
         {
+            std::cerr << "QUIT program exited\n";
             break;
         }
-
-
+        else
+        {
+            std::cerr << "ERROR command not found\n";
+        }
     }
+
     return 0;
 }
